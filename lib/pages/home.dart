@@ -11,30 +11,41 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        children: <Widget>[
-          SearchWidget(),
-          Expanded(
-            child: Container(
-              child: GridView.count(
-                childAspectRatio: 0.7,
-                crossAxisCount: 2,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                padding: EdgeInsets.all(16),
-                children: <Widget>[
-                  FoodCard(),
-                  FoodCard(),
-                  FoodCard(),
-                  FoodCard(),
-                  FoodCard(),
-                  FoodCard(),
-                ],
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            SearchWidget(),
+            Expanded(
+              child: Container(
+                child: GridView.count(
+                  childAspectRatio: 0.7,
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  padding: EdgeInsets.all(16),
+                  children: <Widget>[
+                    FoodCard(),
+                    FoodCard(),
+                    FoodCard(),
+                    FoodCard(),
+                    FoodCard(),
+                    FoodCard(),
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        onPressed: () {},
+        child: Icon(
+          Icons.add,
+          color: Colors.black54,
+        ),
       ),
     );
   }

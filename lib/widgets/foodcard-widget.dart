@@ -21,7 +21,7 @@ class FoodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {},
       child: Container(

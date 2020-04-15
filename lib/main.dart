@@ -11,18 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "NeYesek",
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: Home(),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.white,
-          onPressed: () {},
-          child: Icon(
-            Icons.add,
-            color: Colors.black54,
-          ),
-        ),
-      ),
+      home: Home(),
     );
   }
 }
