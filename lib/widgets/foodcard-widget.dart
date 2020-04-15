@@ -1,14 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:ne_yesek/pages/detail.dart';
+
+import '../models/user_model.dart';
 
 class FoodCard extends StatelessWidget {
-  FoodCard({this.image, this.title, this.description, this.color});
-
-  final String image;
-  final String title;
-  final String description;
-  final Color color;
+  final Food food;
 
   static const List<Color> colorlist = [
     Color(0xFFF5E1BA),
@@ -19,11 +17,20 @@ class FoodCard extends StatelessWidget {
     Color(0xFFF5E17B),
   ];
 
+  const FoodCard({Key key, this.food}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return FoodDetail(
+            food: food,
+          );
+        }));
+      },
       child: Container(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -38,7 +45,8 @@ class FoodCard extends StatelessWidget {
                     width: size.height / 9,
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(
-                          "https://clipartart.com/images/food-icon-clipart-5.jpg"),
+                        food.image,
+                      ),
                     ),
                   ),
                 ),
@@ -49,7 +57,7 @@ class FoodCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "Kiwi",
+                      food.title,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
@@ -58,7 +66,7 @@ class FoodCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 4.0),
                       child: Text(
-                        "Gurugram Mandi \nHaryana",
+                        food.detail.substring(0,30) + '...',
                         style: TextStyle(
                           fontWeight: FontWeight.w300,
                         ),
