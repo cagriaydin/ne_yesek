@@ -42,7 +42,7 @@ class Food {
   String detail;
   String color;
   bool favorite;
-  String date;
+  DateTime date;
   String image;
 
   Food({
