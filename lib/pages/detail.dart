@@ -5,13 +5,29 @@ import '../models/user_model.dart';
 class FoodDetail extends StatefulWidget {
   final Food food;
 
-  const FoodDetail({Key key, this.food}) : super(key: key);
+  const FoodDetail({
+    Key key,
+    this.food,
+  }) : super(key: key);
 
   @override
   _FoodDetailState createState() => _FoodDetailState();
 }
 
 class _FoodDetailState extends State<FoodDetail> {
+  final TextEditingController titleController = new TextEditingController();
+  final TextEditingController detailController = new TextEditingController();
+  final titleStyle = TextStyle(
+    fontSize: 27,
+    fontWeight: FontWeight.w600,
+  );
+  final detailStyle = TextStyle(
+      fontSize: 15,
+      height: 1.5,
+      fontWeight: FontWeight.w600,
+      color: Color(0xff879D95));
+
+  bool isEditMode = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,10 +71,17 @@ class _FoodDetailState extends State<FoodDetail> {
                                 ),
                               ),
                               Spacer(),
-                              Icon(
-                                Icons.share,
-                                color: Colors.white,
-                                size: 24,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    isEditMode = !isEditMode;
+                                  });
+                                },
+                                child: Icon(
+                                  !isEditMode ? Icons.edit : Icons.check,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
                               ),
                               SizedBox(
                                 width: 24,
@@ -71,19 +94,6 @@ class _FoodDetailState extends State<FoodDetail> {
                           ),
                         ),
                         Spacer(),
-                        Container(
-                          padding: EdgeInsets.only(
-                            left: 24,
-                            right: 24,
-                          ),
-                          child: Text(
-                            widget.food.title,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 23),
-                          ),
-                        ),
                         SizedBox(
                           height: 18,
                         ),
@@ -103,14 +113,55 @@ class _FoodDetailState extends State<FoodDetail> {
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  widget.food.detail,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: 15,
-                      height: 1.5,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xff879D95)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    if (!isEditMode)
+                      Text(
+                        widget.food.title,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 27,
+                        ),
+                      )
+                    else
+                      TextField(
+                        style: titleStyle,
+                        cursorColor: Colors.black,
+                        controller: titleController,
+                        decoration: new InputDecoration(
+                            contentPadding: EdgeInsets.all(0),
+                            isDense: true,
+                            hintText: 'Ne hazırladın?',
+                            hintStyle: titleStyle,
+                            border: InputBorder.none),
+                      ),
+                    SizedBox(
+                      height: 24,
+                    ),
+                    if (!isEditMode)
+                      Text(
+                        widget.food.detail,
+                        style: TextStyle(
+                            fontSize: 15,
+                            height: 1.5,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff879D95)),
+                      )
+                    else
+                      TextField(
+                        style: detailStyle,
+                        maxLines: 3,
+                        cursorColor: Colors.black,
+                        controller: detailController,
+                        decoration: new InputDecoration(
+                          contentPadding: EdgeInsets.only(top: 7),
+                          hintText: 'Püf noktaları...',
+                          hintStyle: detailStyle,
+                          border: InputBorder.none,
+                        ),
+                      ),
+                  ],
                 ),
               ),
               SizedBox(
