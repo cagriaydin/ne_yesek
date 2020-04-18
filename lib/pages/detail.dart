@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:ne_yesek/models/food.dart';
+import 'package:ne_yesek/repositories/local_storage.dart';
 
-import '../models/user_model.dart';
+enum DetailMode { show, edit, create }
 
 class FoodDetail extends StatefulWidget {
   final Food food;
 
+  final bool isEditMode;
+  final bool createNew;
+
   const FoodDetail({
     Key key,
     this.food,
+    this.isEditMode = false,
+    this.createNew = false,
   }) : super(key: key);
 
   @override
@@ -17,17 +24,24 @@ class FoodDetail extends StatefulWidget {
 class _FoodDetailState extends State<FoodDetail> {
   final TextEditingController titleController = new TextEditingController();
   final TextEditingController detailController = new TextEditingController();
-  final titleStyle = TextStyle(
-    fontSize: 27,
-    fontWeight: FontWeight.w600,
-  );
-  final detailStyle = TextStyle(
-      fontSize: 15,
-      height: 1.5,
-      fontWeight: FontWeight.w600,
-      color: Color(0xff879D95));
-
   bool isEditMode = false;
+
+  Food currentFood;
+
+  @override
+  void initState() {
+    if (widget.createNew == true) {
+      isEditMode = true;
+      currentFood = Food();
+    } else {
+      currentFood = widget.food;
+      isEditMode = widget.isEditMode;
+      titleController.text = widget.food.title ?? '';
+      detailController.text = widget.food.detail ?? '';
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +53,7 @@ class _FoodDetailState extends State<FoodDetail> {
               Stack(
                 children: [
                   Image.network(
-                    widget.food.image,
+                    currentFood.image,
                     height: 350,
                     width: MediaQuery.of(context).size.width,
                     fit: BoxFit.cover,
@@ -73,6 +87,18 @@ class _FoodDetailState extends State<FoodDetail> {
                               Spacer(),
                               GestureDetector(
                                 onTap: () {
+                                  if (widget.createNew) {
+                                    currentFood.title = titleController.text;
+                                    currentFood.detail = detailController.text;
+                                    LocalStorage.addFood(currentFood);
+                                    Navigator.pop(context);
+                                    return;
+                                  }
+                                  if (isEditMode) {
+                                    currentFood.title = titleController.text;
+                                    currentFood.detail = detailController.text;
+                                    LocalStorage.updateUser();
+                                  }
                                   setState(() {
                                     isEditMode = !isEditMode;
                                   });
@@ -86,9 +112,20 @@ class _FoodDetailState extends State<FoodDetail> {
                               SizedBox(
                                 width: 24,
                               ),
-                              Icon(
-                                Icons.favorite_border,
-                                color: Colors.white,
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    currentFood.favorite =
+                                        !currentFood.favorite;
+                                  });
+                                  LocalStorage.updateUser();
+                                },
+                                child: Icon(
+                                  currentFood.favorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: Colors.white,
+                                ),
                               )
                             ],
                           ),
@@ -118,7 +155,7 @@ class _FoodDetailState extends State<FoodDetail> {
                   children: <Widget>[
                     if (!isEditMode)
                       Text(
-                        widget.food.title,
+                        currentFood.title,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 27,
@@ -130,23 +167,28 @@ class _FoodDetailState extends State<FoodDetail> {
                         cursorColor: Colors.black,
                         controller: titleController,
                         decoration: new InputDecoration(
-                            contentPadding: EdgeInsets.all(0),
-                            isDense: true,
-                            hintText: 'Ne hazırladın?',
-                            hintStyle: titleStyle,
-                            border: InputBorder.none),
+                          contentPadding: EdgeInsets.all(0),
+                          isDense: true,
+                          hintText: 'Ne hazırladın?',
+                          hintStyle: titleStyle,
+                          // I comment the border line because of without border, the user can not be understand is it editable.
+//                          border: InputBorder.none,
+                        ),
                       ),
                     SizedBox(
                       height: 24,
                     ),
                     if (!isEditMode)
                       Text(
-                        widget.food.detail,
+                        currentFood.detail,
                         style: TextStyle(
-                            fontSize: 15,
-                            height: 1.5,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff879D95)),
+                          fontSize: 15,
+                          height: 1.5,
+                          fontWeight: FontWeight.w600,
+                          color: Color(
+                            0xff879D95,
+                          ),
+                        ),
                       )
                     else
                       TextField(
@@ -158,7 +200,8 @@ class _FoodDetailState extends State<FoodDetail> {
                           contentPadding: EdgeInsets.only(top: 7),
                           hintText: 'Püf noktaları...',
                           hintStyle: detailStyle,
-                          border: InputBorder.none,
+                          // I comment the border line because of without border, the user can not be understand is it editable.
+//                          border: InputBorder.none,
                         ),
                       ),
                   ],
@@ -173,4 +216,14 @@ class _FoodDetailState extends State<FoodDetail> {
       ),
     );
   }
+
+  final titleStyle = TextStyle(
+    fontSize: 27,
+    fontWeight: FontWeight.w600,
+  );
+  final detailStyle = TextStyle(
+      fontSize: 15,
+      height: 1.5,
+      fontWeight: FontWeight.w600,
+      color: Color(0xff879D95));
 }
