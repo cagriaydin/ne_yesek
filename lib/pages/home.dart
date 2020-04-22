@@ -45,7 +45,13 @@ class _HomeState extends State<Home> {
                 return SafeArea(
                   child: Column(
                     children: <Widget>[
-                      SearchWidget(),
+                      SearchWidget(
+                        onChanged: (String text) {
+                          setState(() {
+                            LocalStorage.filter(text);
+                          });
+                        },
+                      ),
                       Expanded(
                         child: Container(
                           child: GridView.count(

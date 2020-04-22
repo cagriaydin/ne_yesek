@@ -49,6 +49,7 @@ class _FoodDetailState extends State<FoodDetail> {
       body: SingleChildScrollView(
         child: Container(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Stack(
                 children: [
@@ -63,7 +64,6 @@ class _FoodDetailState extends State<FoodDetail> {
                     color: Colors.black12,
                     padding: EdgeInsets.only(top: 50),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           padding: EdgeInsets.only(
@@ -103,11 +103,13 @@ class _FoodDetailState extends State<FoodDetail> {
                                     isEditMode = !isEditMode;
                                   });
                                 },
-                                child: Icon(
-                                  !isEditMode ? Icons.edit : Icons.check,
-                                  color: Colors.white,
-                                  size: 24,
-                                ),
+                                child: titleController.text.isNotEmpty
+                                    ? Icon(
+                                        !isEditMode ? Icons.edit : Icons.check,
+                                        color: Colors.white,
+                                        size: 24,
+                                      )
+                                    : Container(),
                               ),
                               SizedBox(
                                 width: 24,
@@ -126,7 +128,25 @@ class _FoodDetailState extends State<FoodDetail> {
                                       : Icons.favorite_border,
                                   color: Colors.white,
                                 ),
-                              )
+                              ),
+                              SizedBox(
+                                width: 24,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    currentFood.favorite =
+                                        !currentFood.favorite;
+                                  });
+                                  LocalStorage.deleteFood(currentFood);
+                                  Navigator.pop(context);
+                                  return;
+                                },
+                                child: Icon(
+                                  Icons.delete_outline,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -163,6 +183,8 @@ class _FoodDetailState extends State<FoodDetail> {
                       )
                     else
                       TextField(
+                        onChanged: (text) => setState(() {}),
+                        autofocus: true,
                         style: titleStyle,
                         cursorColor: Colors.black,
                         controller: titleController,
@@ -171,8 +193,7 @@ class _FoodDetailState extends State<FoodDetail> {
                           isDense: true,
                           hintText: 'Ne hazırladın?',
                           hintStyle: titleStyle,
-                          // I comment the border line because of without border, the user can not be understand is it editable.
-//                          border: InputBorder.none,
+                          border: InputBorder.none,
                         ),
                       ),
                     SizedBox(
@@ -200,8 +221,7 @@ class _FoodDetailState extends State<FoodDetail> {
                           contentPadding: EdgeInsets.only(top: 7),
                           hintText: 'Püf noktaları...',
                           hintStyle: detailStyle,
-                          // I comment the border line because of without border, the user can not be understand is it editable.
-//                          border: InputBorder.none,
+                          border: InputBorder.none,
                         ),
                       ),
                   ],

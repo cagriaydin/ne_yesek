@@ -35,6 +35,15 @@ class LocalStorage {
     return currentUser;
   }
 
+  static Future<UserModel> filter(text) async {
+    UserModel user = await getUser();
+    currentUser.foods = user.foods;
+    currentUser.foods = currentUser.foods
+        .where((element) => element.title.contains(text) || element.detail.contains(text))
+        .toList();
+    return currentUser;
+  }
+
   static Future fillUser(Box box) async {
     if (box.isEmpty) {
       await box.add(currentUser.toJson());
@@ -50,6 +59,13 @@ class LocalStorage {
   static Future<dynamic> addFood(Food food) async {
     Box box = await Hive.openBox('userBox');
     currentUser.foods.add(food);
+    await box.putAt(0, currentUser.toJson());
+    await getUser();
+  }
+
+  static Future<dynamic> deleteFood(Food food) async {
+    Box box = await Hive.openBox('userBox');
+    currentUser.foods.remove(food);
     await box.putAt(0, currentUser.toJson());
     await getUser();
   }
