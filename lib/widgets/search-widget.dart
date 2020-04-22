@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class SearchWidget extends StatelessWidget {
+  final void Function(String text) onChanged;
   const SearchWidget({
     Key key,
+    @required this.onChanged,
   }) : super(key: key);
 
   @override
@@ -36,6 +38,7 @@ class SearchWidget extends StatelessWidget {
                     ),
                     border: UnderlineInputBorder(borderSide: BorderSide.none),
                   ),
+                  onChanged: onChanged,
                 ),
               ),
             ),

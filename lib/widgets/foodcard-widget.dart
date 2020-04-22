@@ -76,7 +76,7 @@ class _FoodCardState extends State<FoodCard> {
                             widget.food.detail == null
                                 ? ''
                                 : widget.food.detail.length > 25
-                                    ? widget.food.detail.substring(0, 30) +
+                                    ? widget.food.detail.substring(0, 25) +
                                         '...'
                                     : widget.food.detail,
                             style: TextStyle(
