@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ne_yesek/pages/detail.dart';
+import 'package:ne_yesek/pages/random_food_page.dart';
 import 'package:ne_yesek/repositories/local_storage.dart';
 import 'package:ne_yesek/widgets/foodcard-widget.dart';
 import 'package:ne_yesek/widgets/search-widget.dart';
@@ -74,9 +74,7 @@ class _HomeState extends State<Home> {
         onPressed: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (BuildContext context) {
-            return FoodDetail(
-              createNew: true,
-            );
+            return RandomFoodPage();
           }));
         },
         child: Icon(

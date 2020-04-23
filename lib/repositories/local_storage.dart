@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ne_yesek/models/food.dart';
 import 'package:ne_yesek/models/user_model.dart';
+import 'package:rxdart/rxdart.dart';
 
 class LocalStorage {
   static UserModel currentUser = UserModel(
@@ -22,7 +23,7 @@ class LocalStorage {
     ],
   );
 
-  static StreamController<UserModel> streamController = StreamController();
+  static StreamController<UserModel> streamController = BehaviorSubject();
   static Stream<UserModel> userModelStream = streamController.stream;
 
   static Future<UserModel> getUser() async {
