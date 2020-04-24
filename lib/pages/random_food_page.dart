@@ -131,7 +131,7 @@ class RollSlot extends StatefulWidget {
     @required this.itemExtend,
     @required this.children,
     this.rollSlotController,
-    this.duration = const Duration(milliseconds: 2600),
+    this.duration = const Duration(milliseconds: 3600),
     this.curve = Curves.elasticInOut,
     this.speed = 0.6,
     this.diameterRation = 1,
