@@ -50,6 +50,7 @@ class RandomFoodPage extends StatelessWidget {
 
   void onItemSelected({int currentIndex, Widget currentWidget}) {
     print('callbakc ' + currentIndex.toString());
+    print((currentWidget as FoodCard).food.title);
   }
 }
 
