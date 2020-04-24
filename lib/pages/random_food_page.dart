@@ -32,14 +32,12 @@ class RandomFoodPage extends StatelessWidget {
                   return RollSlot(
                       rollSlotController: _rollSlotController,
                       itemExtend: 300,
-                      children: list
-                          .map((f) => Padding(
-                                padding: const EdgeInsets.all(36.0),
-                                child: FoodCard(
-                                  food: f,
-                                ),
-                              ))
-                          .toList());
+                      onItemSelected: onItemSelected,
+                      children: list.map((f) {
+                        return FoodCard(
+                          food: f,
+                        );
+                      }).toList());
                 }
                 return Center(child: CircularProgressIndicator());
               },
@@ -49,7 +47,16 @@ class RandomFoodPage extends StatelessWidget {
       ),
     );
   }
+
+  void onItemSelected({int currentIndex, Widget currentWidget}) {
+    print('callbakc ' + currentIndex.toString());
+  }
 }
+
+typedef void SelectedItemCallback({
+  @required int currentIndex,
+  @required Widget currentWidget,
+});
 
 class RollSlot extends StatefulWidget {
   final GlobalKey<RollSlotState> rollSlotController;
@@ -63,6 +70,12 @@ class RollSlot extends StatefulWidget {
 
   final double itemExtend;
 
+  final double perspective;
+
+  final double squeeze;
+
+  final SelectedItemCallback onItemSelected;
+
   const RollSlot({
     Key key,
     @required this.itemExtend,
@@ -70,8 +83,11 @@ class RollSlot extends StatefulWidget {
     this.rollSlotController,
     this.duration = const Duration(milliseconds: 2600),
     this.curve = Curves.elasticInOut,
-    this.speed = 0.8,
+    this.speed = 0.6,
     this.diameterRation = 1,
+    this.perspective = 0.003,
+    this.squeeze = 1.5,
+    this.onItemSelected,
   }) : super(key: rollSlotController);
 
   @override
@@ -84,15 +100,37 @@ class RollSlotState extends State<RollSlot> {
 
   @override
   void initState() {
+    shuffleAndFillTheList();
+    addListenerScrollController();
+    super.initState();
+  }
+
+  void addListenerScrollController() {
+    _controller.addListener(() {
+      final currentScrollPixels = _controller.position.pixels;
+      if (currentScrollPixels % widget.itemExtend == 0) {
+        final int currentIndex = currentScrollPixels ~/ widget.itemExtend;
+        final Widget currentWidget = currentList.elementAt(currentIndex);
+        print('index : $currentIndex');
+        if (widget.onItemSelected != null) {
+          widget.onItemSelected(
+            currentIndex: currentIndex,
+            currentWidget: currentWidget,
+          );
+        }
+      }
+    });
+  }
+
+  void shuffleAndFillTheList() {
     if (widget.children != null && widget.children.isNotEmpty) {
-      double d = widget.duration.inMilliseconds / 100;
-      while (currentList.length < ((d * widget.speed) / 2)) {
+      double d = (widget.duration.inMilliseconds / 100) * widget.speed;
+      while (currentList.length < d) {
         setState(() {
           currentList.addAll(widget.children.toList()..shuffle());
         });
       }
     }
-    super.initState();
   }
 
   void animateToRandomly() {
@@ -108,15 +146,24 @@ class RollSlotState extends State<RollSlot> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListWheelScrollView(
       itemExtent: widget.itemExtend,
       diameterRatio: widget.diameterRation,
       controller: _controller,
+      squeeze: widget.squeeze,
+      perspective: widget.perspective,
       children: currentList.map((widget) {
         return widget;
       }).toList(),
       onSelectedItemChanged: (selectedIndex) {
+        print('herre');
         print('selected inddex : $selectedIndex');
       },
     );
