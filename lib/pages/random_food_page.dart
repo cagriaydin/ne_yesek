@@ -6,7 +6,9 @@ import 'package:ne_yesek/repositories/local_storage.dart';
 import 'package:ne_yesek/widgets/foodcard-widget.dart';
 
 class RandomFoodPage extends StatelessWidget {
-  GlobalKey<RollSlotState> _rollSlotController = GlobalKey<RollSlotState>();
+  GlobalKey<RollSlotState> _rollSlotController1 = GlobalKey<RollSlotState>();
+  GlobalKey<RollSlotState> _rollSlotController2 = GlobalKey<RollSlotState>();
+  GlobalKey<RollSlotState> _rollSlotController3 = GlobalKey<RollSlotState>();
 
   @override
   Widget build(BuildContext context) {
@@ -16,21 +18,23 @@ class RandomFoodPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _rollSlotController.currentState.animateToRandomly();
+          _rollSlotController1.currentState.animateToRandomly();
+          _rollSlotController2.currentState.animateToRandomly();
+          _rollSlotController3.currentState.animateToRandomly();
         },
       ),
-      body: Column(
+      body: Row(
         children: [
-          Expanded(
+          SizedBox(width: 8,),
+          Flexible(
             child: StreamBuilder(
               stream: LocalStorage.userModelStream,
               builder:
                   (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
                 if (snapshot.hasData) {
                   List list = snapshot.data.foods.toList()..shuffle();
-
                   return RollSlot(
-                      rollSlotController: _rollSlotController,
+                      rollSlotController: _rollSlotController1,
                       itemExtend: 300,
                       onItemSelected: onItemSelected,
                       children: list.map((f) {
@@ -43,6 +47,51 @@ class RandomFoodPage extends StatelessWidget {
               },
             ),
           ),
+          SizedBox(width: 8,),
+          Flexible(
+            child: StreamBuilder(
+              stream: LocalStorage.userModelStream,
+              builder:
+                  (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+                if (snapshot.hasData) {
+                  List list = snapshot.data.foods.toList()..shuffle();
+                  return RollSlot(
+                      rollSlotController: _rollSlotController2,
+                      itemExtend: 300,
+                      onItemSelected: onItemSelected,
+                      children: list.map((f) {
+                        return FoodCard(
+                          food: f,
+                        );
+                      }).toList());
+                }
+                return Center(child: CircularProgressIndicator());
+              },
+            ),
+          ),
+          SizedBox(width: 8,),
+          Flexible(
+            child: StreamBuilder(
+              stream: LocalStorage.userModelStream,
+              builder:
+                  (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+                if (snapshot.hasData) {
+                  List list = snapshot.data.foods.toList()..shuffle();
+                  return RollSlot(
+                      rollSlotController: _rollSlotController3,
+                      itemExtend: 300,
+                      onItemSelected: onItemSelected,
+                      children: list.map((f) {
+                        return FoodCard(
+                          food: f,
+                        );
+                      }).toList());
+                }
+                return Center(child: CircularProgressIndicator());
+              },
+            ),
+          ),
+          SizedBox(width: 8,),
         ],
       ),
     );
