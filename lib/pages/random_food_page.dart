@@ -25,7 +25,9 @@ class RandomFoodPage extends StatelessWidget {
       ),
       body: Row(
         children: [
-          SizedBox(width: 8,),
+          SizedBox(
+            width: 8,
+          ),
           Flexible(
             child: StreamBuilder(
               stream: LocalStorage.userModelStream,
@@ -47,7 +49,9 @@ class RandomFoodPage extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(width: 8,),
+          SizedBox(
+            width: 8,
+          ),
           Flexible(
             child: StreamBuilder(
               stream: LocalStorage.userModelStream,
@@ -69,7 +73,9 @@ class RandomFoodPage extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(width: 8,),
+          SizedBox(
+            width: 8,
+          ),
           Flexible(
             child: StreamBuilder(
               stream: LocalStorage.userModelStream,
@@ -91,7 +97,9 @@ class RandomFoodPage extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(width: 8,),
+          SizedBox(
+            width: 8,
+          ),
         ],
       ),
     );
@@ -135,7 +143,7 @@ class RollSlot extends StatefulWidget {
     this.curve = Curves.elasticInOut,
     this.speed = 0.6,
     this.diameterRation = 1,
-    this.perspective = 0.003,
+    this.perspective = 0.0003,
     this.squeeze = 1.5,
     this.onItemSelected,
   }) : super(key: rollSlotController);
@@ -147,6 +155,7 @@ class RollSlot extends StatefulWidget {
 class RollSlotState extends State<RollSlot> {
   ScrollController _controller = ScrollController();
   List<Widget> currentList = [];
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -159,7 +168,7 @@ class RollSlotState extends State<RollSlot> {
     _controller.addListener(() {
       final currentScrollPixels = _controller.position.pixels;
       if (currentScrollPixels % widget.itemExtend == 0) {
-        final int currentIndex = currentScrollPixels ~/ widget.itemExtend;
+        currentIndex = currentScrollPixels ~/ widget.itemExtend;
         final Widget currentWidget = currentList.elementAt(currentIndex);
         print('index : $currentIndex');
         if (widget.onItemSelected != null) {
@@ -189,10 +198,15 @@ class RollSlotState extends State<RollSlot> {
 //            ? _controller.position.minScrollExtent
 //            : _controller.position.maxScrollExtent;
     _controller.animateTo(
-      Random().nextInt(currentList.length) * widget.itemExtend,
+      randomIndex() * widget.itemExtend,
       curve: Curves.elasticInOut,
       duration: widget.duration,
     );
+  }
+
+  int randomIndex() {
+    int randomInt = Random().nextInt(currentList.length);
+    return randomInt == currentIndex ? randomIndex() : randomInt;
   }
 
   @override
@@ -204,6 +218,7 @@ class RollSlotState extends State<RollSlot> {
   @override
   Widget build(BuildContext context) {
     return ListWheelScrollView(
+      physics: BouncingScrollPhysics(),
       itemExtent: widget.itemExtend,
       diameterRatio: widget.diameterRation,
       controller: _controller,
