@@ -1,6 +1,8 @@
-# ne_yesek
+# Ne Yesek
 
-A new Flutter project.
+Choose one of your favorite dishes and solve the problem of what I eat today.
+
+<img src="https://github.com/cagriaydin/ne_yesek/raw/master/screenshot.png" width="750">
 
 ## Getting Started
 
